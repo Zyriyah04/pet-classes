@@ -1,0 +1,207 @@
+using System;
+using System.Collections.Generic;
+
+// Dream Pet Adoption Center 
+
+abstract class Pet
+{
+    private string name;
+    private int age;
+
+    public Pet(string name, int age)
+    {
+        this.name = name;
+        this.age = age;
+    }
+
+    public string GetName()
+    {
+        return name;
+    }
+
+    public int GetAge()
+    {
+        return age;
+    }
+
+    public abstract string MakeSound();
+    public abstract string GetCareTip();
+    public abstract string GetTypeName();
+
+    public void DisplayInfo()
+    {
+        Console.WriteLine("Type: " + GetTypeName());
+        Console.WriteLine("Name: " + GetName());
+        Console.WriteLine("Age: " + GetAge());
+        Console.WriteLine("Sound: " + MakeSound());
+        Console.WriteLine("Care Tip: " + GetCareTip());
+        Console.WriteLine(new string('-', 30));
+    }
+}
+
+class Bunny : Pet
+{
+    public Bunny(string name, int age) : base(name, age) { }
+
+    public override string MakeSound()
+    {
+        return "sniff sniff";
+    }
+
+    public override string GetCareTip()
+    {
+        return "Keep fresh hay and give gentle play time.";
+    }
+
+    public override string GetTypeName()
+    {
+        return "Bunny";
+    }
+}
+
+class Cat : Pet
+{
+    public Cat(string name, int age) : base(name, age) { }
+
+    public override string MakeSound()
+    {
+        return "meow";
+    }
+
+    public override string GetCareTip()
+    {
+        return "Provide scratching spots and cozy nap areas.";
+    }
+
+    public override string GetTypeName()
+    {
+        return "Cat";
+    }
+}
+
+class Dog : Pet
+{
+    public Dog(string name, int age) : base(name, age) { }
+
+    public override string MakeSound()
+    {
+        return "woof";
+    }
+
+    public override string GetCareTip()
+    {
+        return "Daily walks and playful exercise are important.";
+    }
+
+    public override string GetTypeName()
+    {
+        return "Dog";
+    }
+}
+
+class AdoptionCenter
+{
+    private List<Pet> pets = new List<Pet>();
+
+    public void AddPet(Pet pet)
+    {
+        pets.Add(pet);
+        Console.WriteLine("\n" + pet.GetName() + " was added successfully.\n");
+    }
+
+    public void ShowPets()
+    {
+        if (pets.Count == 0)
+        {
+            Console.WriteLine("\nNo pets have been added yet.\n");
+            return;
+        }
+
+        Console.WriteLine("\nAvailable Pets");
+        Console.WriteLine("==============================");
+        foreach (Pet pet in pets)
+        {
+            pet.DisplayInfo();
+        }
+    }
+}
+
+class Program
+{
+    static Pet CreatePet()
+    {
+        Console.WriteLine("\nChoose a pet type:");
+        Console.WriteLine("1. Bunny");
+        Console.WriteLine("2. Cat");
+        Console.WriteLine("3. Dog");
+        Console.Write("Enter choice: ");
+        string choice = Console.ReadLine();
+
+        Console.Write("Enter pet name: ");
+        string name = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            Console.WriteLine("Name cannot be empty.\n");
+            return null;
+        }
+
+        Console.Write("Enter pet age: ");
+        string ageInput = Console.ReadLine();
+
+        int age;
+        if (!int.TryParse(ageInput, out age) || age <= 0)
+        {
+            Console.WriteLine("Please enter a valid age.\n");
+            return null;
+        }
+
+        if (choice == "1")
+            return new Bunny(name, age);
+        if (choice == "2")
+            return new Cat(name, age);
+        if (choice == "3")
+            return new Dog(name, age);
+
+        Console.WriteLine("Invalid pet type.\n");
+        return null;
+    }
+
+    static void Main()
+    {
+        AdoptionCenter center = new AdoptionCenter();
+
+        while (true)
+        {
+            Console.WriteLine("Dream Pet Adoption Center");
+            Console.WriteLine("1. Add a pet");
+            Console.WriteLine("2. View all pets");
+            Console.WriteLine("3. Exit");
+            Console.Write("Choose an option: ");
+
+            string menuChoice = Console.ReadLine();
+
+            if (menuChoice == "1")
+            {
+                Pet pet = CreatePet();
+                if (pet != null)
+                {
+                    center.AddPet(pet);
+                }
+            }
+            else if (menuChoice == "2")
+            {
+                center.ShowPets();
+            }
+            else if (menuChoice == "3")
+            {
+                Console.WriteLine("\nGoodbye.");
+                break;
+            }
+            else
+            {
+                Console.WriteLine("\nInvalid option. Try again.\n");
+            }
+        }
+    }
+}
